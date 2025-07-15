@@ -36,20 +36,30 @@ def draw_cat_plot():
 # 10
 def draw_heat_map():
     # 11
-    df_heat = None
+    cond1 = df.ap_lo <= df.ap_hi
+    cond2 = df.height >= df.height.quantile(2.5/100)
+    cond3 = df.height <= df.height.quantile(97.5/100)
+    cond4 = df.weight >= df.weight.quantile(2.5/100)
+    cond5 = df.weight <= df.weight.quantile(97.5/100)
+    cond = cond1 & cond2 & cond3 & cond4 & cond5
+    df_heat = df[cond]
 
     # 12
-    corr = None
+    corr = df_heat.reset_index().corr()
 
     # 13
-    mask = None
+    rows = np.arange(corr.shape[0]).reshape(-1,1)
+    cols = np.arange(corr.shape[1])
+
+    mask = rows <= cols
 
 
 
     # 14
-    fig, ax = None
+    fig, ax = plt.subplots()
 
     # 15
+    ax = sns.heatmap(data=corr, cbar = True, annot=True, fmt=".1f", annot_kws={"size": 6}, mask=mask)
 
 
 
